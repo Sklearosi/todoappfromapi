@@ -90,10 +90,27 @@ function App() {
                     <label
                       className="w-5 h-5 rounded-full border border-[background: linear-gradient(135deg, #55DDFF 0%, #C058F3 100%)]"
                       htmlFor={tsk.task}
-                      
+                      onClick={async () => {
+                        try {
+                          const updatedTask = { ...tsk, active: !tsk.active }; // Toggle the active property
+                          const response = await axios.put(
+                            `https://sqltodoapp.onrender.com/api/tasks/${tsk.id}`,
+                            updatedTask
+                          );
+
+                          console.log(response);
+                          getData();
+                        } catch (error) {
+                          console.log(error);
+                        }
+                      }}
                     ></label>
                     <input className="hidden" type="checkbox" id={tsk.task} />
-                    <p className={` ml-2 text-[400] text-[12px]  ${tsk.active ? 'text-[#494C6B]':'text-[#D1D2DA]'}`}>
+                    <p
+                      className={` ml-2 text-[400] text-[12px]  ${
+                        tsk.active ? "text-[#494C6B]" : "text-[#D1D2DA] line-through"
+                      }`}
+                    >
                       {tsk.task}
                     </p>
                   </div>
@@ -118,7 +135,7 @@ function App() {
           })}
         </ul>
         <div className=" h-12 flex w-[287px] m-auto justify-between items-center text-[400] text-[12px] text-[#9495A5]">
-          <p>items left</p>
+          <p>items left {todo.length}</p>
           <p>Clear Completed</p>
         </div>
       </div>
