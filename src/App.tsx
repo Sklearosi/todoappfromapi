@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { TodoTask } from "./types.d";
+import { Filters } from "./filters.d";
 function App() {
   const [task, setTask] = useState<string>("");
   const [todo, setTodo] = useState<TodoTask[]>([]);
+  const [filters, setFilters] = useState<Filters[]>([])
 
   const getData = async () => {
     try {
@@ -20,6 +22,7 @@ function App() {
 
   useEffect(() => {
     getData();
+    
   }, []);
 
   const insert = async () => {
@@ -35,13 +38,12 @@ function App() {
       );
 
       console.log(response);
-      setTodo(response.data);
+      
     } catch (error) {
       console.log(error);
     }
 
-    setTask("");
-    getData();
+    getData()
   };
 
   return (
@@ -92,7 +94,7 @@ function App() {
                       htmlFor={tsk.task}
                       onClick={async () => {
                         try {
-                          const updatedTask = { ...tsk, active: !tsk.active }; // Toggle the active property
+                          const updatedTask = { ...tsk, active: !tsk.active };
                           const response = await axios.put(
                             `https://sqltodoapp.onrender.com/api/tasks/${tsk.id}`,
                             updatedTask
@@ -115,15 +117,19 @@ function App() {
                     </p>
                   </div>
                   <img
-                    onClick={async () => {
+                    onClick={async (e) => {
                       try {
                         const response = await axios.delete(
                           `https://sqltodoapp.onrender.com/api/tasks/${tsk.id}`
                         );
+
+                        const updatedTodo = todo.filter((task) => task.id !== tsk.id);
+                        setTodo(updatedTodo);
+                        
                       } catch (error) {
                         console.log(error);
                       }
-                      getData();
+                      
                     }}
                     className=" w-3 h-3"
                     src="images/icon-cross.svg"
@@ -136,11 +142,26 @@ function App() {
         </ul>
         <div className=" h-12 flex w-[287px] m-auto justify-between items-center text-[400] text-[12px] text-[#9495A5]">
           <p>items left {todo.length}</p>
-          <p>Clear Completed</p>
+          <p onClick={async () => {
+                      try {
+                        const response = await axios.delete(
+                          `https://sqltodoapp.onrender.com/api/clear-tasks`
+                        );
+
+                        const updatedTodo = todo.filter((task) => task.active);
+                        setTodo(updatedTodo);
+                        
+                      } catch (error) {
+                        console.log(error);
+                      }
+                      
+                    }}>Clear Completed</p>
         </div>
       </div>
       <div className=" bg-white rounded-xl h-12 w-[327px] m-auto mt-5 shadow-shadowForFirst text-[700] text-[14px] text-[#9495A5] flex justify-center items-center gap-10">
-        <p>All</p>
+        <p onClick={() => {
+          const updatedAll = {}
+        }}>All</p>
         <p>Acitve</p>
         <p>Completed</p>
       </div>
