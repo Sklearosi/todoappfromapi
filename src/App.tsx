@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { TodoTask } from "./types.d";
-import { Filters } from "./filters.d";
 function App() {
   const [task, setTask] = useState<string>("");
   const [todo, setTodo] = useState<TodoTask[]>([]);
-  const [filters, setFilters] = useState<Filters[]>([])
 
   const getData = async () => {
     try {
@@ -117,12 +115,14 @@ function App() {
                     </p>
                   </div>
                   <img
-                    onClick={async (e) => {
+                    onClick={async () => {
                       try {
                         const response = await axios.delete(
                           `https://sqltodoapp.onrender.com/api/tasks/${tsk.id}`
                         );
 
+                        console.log(response);
+                        
                         const updatedTodo = todo.filter((task) => task.id !== tsk.id);
                         setTodo(updatedTodo);
                         
@@ -147,7 +147,7 @@ function App() {
                         const response = await axios.delete(
                           `https://sqltodoapp.onrender.com/api/clear-tasks`
                         );
-
+                        console.log(response);
                         const updatedTodo = todo.filter((task) => task.active);
                         setTodo(updatedTodo);
                         
