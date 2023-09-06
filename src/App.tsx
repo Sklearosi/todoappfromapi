@@ -159,9 +159,7 @@ function App() {
         </div>
       </div>
       <div className=" bg-white rounded-xl h-12 w-[327px] m-auto mt-5 shadow-shadowForFirst text-[700] text-[14px] text-[#9495A5] flex justify-center items-center gap-10">
-        <p onClick={() => {
-          const updatedAll = {}
-        }}>All</p>
+        <p >All</p>
         <p>Acitve</p>
         <p>Completed</p>
       </div>
